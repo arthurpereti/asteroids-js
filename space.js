@@ -14,9 +14,11 @@ let txt_vidas = new Texto()
 let n_vidas = new Texto()
 const som1 = new Audio('assets/nave_som.mp3')
 const som2 = new Audio('assets/batida.mp3')
+const som3 = new Audio('assets/som_tiro.wav')
 som1.volume = 1.0
 som1.loop = true
 som2.volume = 0.7
+som3.volume = 1.0
 
 const discos = [disco1, disco2, disco3] // acrescentado, verificar
 const grupoTiros = []
@@ -89,6 +91,7 @@ function tiros_nave() {
                 // Incrementa os pontos do jogador
                 nav1.pts += 1
             }
+            som3.play()
         }
     }
 }

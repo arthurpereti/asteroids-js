@@ -1,22 +1,30 @@
 let des = document.getElementById('des').getContext('2d')
 
+const fim = new Over(110, 175, 300, 323, 'assets/kabum.png')
 let bg1 = new BG(0,0,500,700,'assets/bg1.jpg')
 let bg2 = new BG(0,-700,500,700,'assets/bg2.jpg')
 let bg3 = new BG(0,-1400,500,700,'assets/bg1.jpg')
 let bg4 = new BG(0,-2100,500,700,'assets/bg2.jpg')
-let nav1 = new Nave(200,520,50,70,'assets/nave.png')
-let disco1 = new Disco(100,-200,50,50,'assets/disco.png')
-let disco2 = new Disco(400,-400,50,50,'assets/disco2.png')
-let disco3 = new Disco(350,-600,50,50,'assets/disco3.png')
+let nav1 = new Nave(200,520,50,70,'assets/nave_oficial.png')
+let disco1 = new Disco(100,-200,50,50,'assets/lua.png')
+let disco2 = new Disco(400,-400,50,50,'assets/asteroide.png')
+let disco3 = new Disco(350,-600,50,50,'assets/cometa.png')
 let txt_pts = new Texto()
 let pts = new Texto()
 let txt_vidas = new Texto()
 let n_vidas = new Texto()
+const texto_game_over = new Texto()
+let jogar = true
 const som1 = new Audio('assets/nave_som.mp3')
 const som2 = new Audio('assets/batida.mp3')
+const som3 = new Audio('assets/som_tiro.wav')
 som1.volume = 1.0
 som1.loop = true
 som2.volume = 0.7
+som3.volume = 1.0
+
+
+
 
 const discos = [disco1, disco2, disco3] // acrescentado, verificar
 const grupoTiros = []
@@ -47,6 +55,12 @@ document.addEventListener('keypress', (ev)=>{
     }
     som1.play()
 })
+
+function gameover(){
+    if(nav1.vida <= 0){
+        jogar = false
+    }
+}
 
 function pontos(){
     if(nav1.point(disco1)){
@@ -89,26 +103,33 @@ function tiros_nave() {
                 // Incrementa os pontos do jogador
                 nav1.pts += 1
             }
+            som3.play()
         }
     }
 }
 
-function desenha(){    
-    bg1.des_obj()
-    bg2.des_obj()
-    bg3.des_obj()
-    bg4.des_obj()
-    disco1.des_obj()
-    disco2.des_obj()
-    disco3.des_obj()
-    nav1.des_obj()
-    grupoTiros.forEach((tiro)=>{
-        tiro.des_tiro()
-    })
-    txt_pts.des_text('Pontos:',20,40,'white','30px Times')
-    pts.des_text(nav1.pts,120,40,'white','30px Times')
-    txt_vidas.des_text('Vidas:',380,40,'white','30px Times')
-    n_vidas.des_text(nav1.vida,460,40,'white','30px Times')
+function desenha(){
+        bg1.des_obj()
+        bg2.des_obj()
+        bg3.des_obj()
+        bg4.des_obj()
+    if(jogar){
+        disco1.des_obj()
+        disco2.des_obj()
+        disco3.des_obj()
+        nav1.des_obj()
+        grupoTiros.forEach((tiro)=>{
+            tiro.des_tiro()
+        })
+        txt_pts.des_text('Pontos:',10,65,'white','orange','30px Times')
+        pts.des_text(nav1.pts,120,65,'white','orange','30px Times')
+        txt_vidas.des_text('Vidas:',380,65,'white','orange','30px Times')
+        n_vidas.des_text(nav1.vida,460,65,'white','orange','30px Times')
+    }else{
+        fim.des_obj()
+        texto_game_over.des_text('Game Over',150,350, 'red','black','50px Impact')
+    }    
+
 }
 
 function atualiza(){
@@ -116,20 +137,22 @@ function atualiza(){
     bg2.mov(-700,1400)
     bg3.mov(-1400,700)
     bg4.mov(-2100,0)
-    disco1.mov()
-    disco2.mov()
-    disco3.mov()
-    nav1.mov()
-    grupoTiros.forEach((tiro)=>{
-        tiro.mov()
-        if(tiro.y <= -50){
-            grupoTiros.splice(tiro[0],1)
-        }
-    })
-    tiros_nave() // acrescentado - verificar
-    colisao()
-    pontos()
-    
+    if(jogar){
+        disco1.mov()
+        disco2.mov()
+        disco3.mov()
+        nav1.mov()
+        grupoTiros.forEach((tiro)=>{
+            tiro.mov()
+            if(tiro.y <= -50){
+                grupoTiros.splice(tiro[0],1)
+            }
+        })
+        tiros_nave() // acrescentado - verificar
+        colisao()
+        pontos()
+        gameover()
+    }
 }
 
 

@@ -17,7 +17,7 @@ class Obj {
 class Nave extends Obj{
     dir = 0
     pts = 0
-    vida = 5
+    vida = 3
 
     mov(){
         this.x += this.dir
@@ -96,6 +96,10 @@ class Tiro extends Obj{
     }
 }
 
+class Over extends Obj{
+
+}
+
 class BG extends Obj{
 
     mov(ini,lim){
@@ -107,9 +111,11 @@ class BG extends Obj{
 }
 
 class Texto{
-    des_text(texto,x,y,cor,font){
+    des_text(texto,x,y,cor,bord,font){
         des.font = font
         des.fillStyle = cor
+        des.strokeStyle = bord
         des.fillText(texto,x,y)
+        des.strokeText(texto,x,y)
     }
 }

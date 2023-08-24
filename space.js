@@ -17,10 +17,12 @@ const texto_game_over = new Texto()
 let jogar = true
 const som1 = new Audio('assets/nave_som.mp3')
 const som2 = new Audio('assets/batida.mp3')
+const som4 = new Audio('assets/gameover.mp3')
 som1.volume = 1.0
 som1.loop = true
 som2.volume = 0.7
-
+som4.volume = 1.0
+som4.loop = false
 
 
 
@@ -57,6 +59,7 @@ document.addEventListener('keypress', (ev)=>{
 function gameover(){
     if(nav1.vida <= 0){
         jogar = false
+        som4.play()
     }
 }
 

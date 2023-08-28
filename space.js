@@ -5,10 +5,7 @@ let bg1 = new BG(0,0,500,700,'assets/bg1.jpg')
 let bg2 = new BG(0,-700,500,700,'assets/bg2.jpg')
 let bg3 = new BG(0,-1400,500,700,'assets/bg1.jpg')
 let bg4 = new BG(0,-2100,500,700,'assets/bg2.jpg')
-let nav1 = new Nave(200,520,50,70,'assets/nave_oficial.png')
-let disco1 = new Disco(100,-200,50,50,'assets/lua.png')
-let disco2 = new Disco(400,-400,50,50,'assets/asteroide.png')
-let disco3 = new Disco(350,-600,50,50,'assets/cometa.png')
+let nav1 = new Nave(200,520,75,84.75,'assets/nave.png')
 let txt_pts = new Texto()
 let pts = new Texto()
 let txt_vidas = new Texto()
@@ -26,8 +23,80 @@ som3.volume = 1.0
 
 
 
-const discos = [disco1, disco2, disco3] // acrescentado, verificar
-const grupoTiros = []
+let grupoTiros = [] 
+let tiros = {
+    des(){
+        grupoTiros.forEach((tiro)=>{
+            tiro.des_tiro()
+            som3.play()
+        })
+    },
+    atual(){
+        grupoTiros.forEach((tiro)=>{
+            tiro.mov()
+            if(tiro.y <= -10){
+                grupoTiros.splice(tiro[0],1)
+            }
+        })
+    }
+}
+
+let grupoDiscos = []
+let discos = {
+    time1: 0, 
+    time2: 0,
+    time3: 0,
+
+    criaDisco(){
+        this.time1 += 1
+        this.time2 += 1
+        this.time3 += 1
+        let pos_x = (Math.random() * (438 - 2 +1)+2)
+        let pos_x2 = (Math.random() * (438 - 2 +1)+2)
+        let pos_x3 = (Math.random() * (438 - 2 +1)+2)
+        if(this.time1 >=95){
+            this.time1 = 0
+            grupoDiscos.push(new Disco(pos_x,-200,50,50,'assets/asteroide.png'))
+            console.log(grupoDiscos)
+        }
+        if(this.time2 >=95){
+            this.time2 = 0
+            grupoDiscos.push(new Disco(pos_x2,-300,50,50,'assets/lua.png'))
+            console.log(grupoDiscos)
+        }
+        if(this.time3 >=95){
+            this.time3 = 0
+            grupoDiscos.push(new Disco(pos_x3,-400,50,50,'assets/asteroide.png'))
+            console.log(grupoDiscos)
+        }
+    },
+    des(){
+        grupoDiscos.forEach((disc)=>{
+            disc.des_obj()
+        })
+    },
+    destroiDisco(){
+        grupoTiros.forEach((tiro)=>{
+            grupoDiscos.forEach((disc)=>{
+                if(tiro.colid(disc)){
+                    grupoTiros.splice(grupoTiros.indexOf(tiro), 1)
+                    grupoDiscos.splice(grupoDiscos.indexOf(disc), 1)
+                    nav1.pts +=1
+                }
+            })
+        })
+    },
+    atual(){
+        this.criaDisco()
+        this.destroiDisco()
+        grupoDiscos.forEach((disc)=>{
+            disc.mov()
+            if(disc.y >= 710){
+                grupoDiscos.splice(grupoDiscos.indexOf(disc),1)
+            }
+        })
+    }
+}
 
 document.addEventListener('keydown', (ev)=>{
     if(ev.key === 'a'){
@@ -72,23 +141,34 @@ function pontos(){
     }
 }
 
+// function colisao(){
+//     if(nav1.colid(disco1)){
+//         disco1.recomeca()
+//         nav1.vida -=1
+//         som1.pause()
+//         som2.play()
+//     }else if(nav1.colid(disco2)){
+//         disco2.recomeca()
+//         nav1.vida -=1
+//         som1.pause()
+//         som2.play()
+//     }else if(nav1.colid(disco3)){
+//         disco3.recomeca()
+//         nav1.vida -=1
+//         som1.pause()
+//         som2.play()
+//     }
+// }
+
 function colisao(){
-    if(nav1.colid(disco1)){
-        disco1.recomeca()
-        nav1.vida -=1
-        som1.pause()
-        som2.play()
-    }else if(nav1.colid(disco2)){
-        disco2.recomeca()
-        nav1.vida -=1
-        som1.pause()
-        som2.play()
-    }else if(nav1.colid(disco3)){
-        disco3.recomeca()
-        nav1.vida -=1
-        som1.pause()
-        som2.play()
-    }
+    grupoDiscos.forEach((disc)=>{
+        if(nav1.colid(disc)){
+            grupoDiscos.splice(grupoDiscos.indexOf(disc), 1)
+            nav1.vida -=1
+            som1.pause()
+            som2.play()
+        }
+    })
 }
 
 // acrescentado - verificar
@@ -114,9 +194,8 @@ function desenha(){
         bg3.des_obj()
         bg4.des_obj()
     if(jogar){
-        disco1.des_obj()
-        disco2.des_obj()
-        disco3.des_obj()
+        tiros.des()
+        discos.des()
         nav1.des_obj()
         grupoTiros.forEach((tiro)=>{
             tiro.des_tiro()
@@ -138,9 +217,6 @@ function atualiza(){
     bg3.mov(-1400,700)
     bg4.mov(-2100,0)
     if(jogar){
-        disco1.mov()
-        disco2.mov()
-        disco3.mov()
         nav1.mov()
         grupoTiros.forEach((tiro)=>{
             tiro.mov()
@@ -150,8 +226,10 @@ function atualiza(){
         })
         tiros_nave() // acrescentado - verificar
         colisao()
-        pontos()
+        // pontos()
         gameover()
+        tiros.atual()
+        discos.atual()
     }
 }
 

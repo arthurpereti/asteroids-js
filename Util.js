@@ -12,6 +12,17 @@ class Obj {
         img.src = this.at
         des.drawImage(img,this.x,this.y,this.w,this.h)
     }
+
+    colid(objeto) {
+        if((this.x < objeto.x + objeto.w)&&
+            (this.x + this.w > objeto.x)&&
+            (this.y < objeto.y + objeto.h)&&
+            (this.y + this.h > objeto.y)){
+            return true       
+        }else{
+            return false
+        }
+    }
 }
 
 class Nave extends Obj{
@@ -36,44 +47,25 @@ class Nave extends Obj{
         }
     }
 
-    colid(objeto){
-        if((this.x < objeto.x+objeto.w)&&
-        (this.x+this.w > objeto.x)&&
-        (this.y < objeto.y + objeto.h)&&
-        (this.y + this.h > objeto.y)){
-            return true
-        }else{
-            return false
-        }
-    }
+
 }
 
 class Disco extends Obj{
 
+        vel = Math.random() * (6 - 3) + 3
+        velx = Math.random() * (2 - (-2)) + (-2)
+
     mov(){
-        this.y += 7
+        this.y += this.vel
+        this.x += this.velx
+    
         if(this.y >= 700){
             this.y = -200
             this.x = (Math.random() * (448 - 2 +1)+2) // o disco tem 50 px de largura
         }
     }
-
-    recomeca(){
-        this.y = -200
-        this.x = (Math.random() * (448 - 2 +1)+2) // o disco tem 50 px de largura 
-    }
-
-    // acrescentado, verificar
-    colid(objeto) {
-        // Verifica colisão entre duas caixas delimitadoras retangulares
-        return (
-            this.x < objeto.x + objeto.w &&
-            this.x + this.w > objeto.x &&
-            this.y < objeto.y + objeto.h &&
-            this.y + this.h > objeto.y
-        )
-    }
 }
+
 
 class Tiro extends Obj{
     des_tiro(){

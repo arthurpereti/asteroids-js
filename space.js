@@ -15,10 +15,13 @@ let jogar = true
 const som1 = new Audio('assets/nave_som.mp3')
 const som2 = new Audio('assets/batida.mp3')
 const som3 = new Audio('assets/som_tiro.wav')
+const som4 = new Audio('assets/risada.mp3')
 som1.volume = 1.0
 som1.loop = true
 som2.volume = 0.7
 som3.volume = 1.0
+som4.volume = 1.0
+
 
 
 
@@ -207,8 +210,10 @@ function desenha(){
     }else{
         fim.des_obj()
         texto_game_over.des_text('Game Over',150,350, 'red','black','50px Impact')
-    }    
+        som4.play()
 
+    }    
+    
 }
 
 function atualiza(){

@@ -24,6 +24,9 @@ som2.volume = 0.7
 som3.volume = 1.0
 som4.volume = 1.0
 
+if(!localStorage.getItem('highscore')){
+    localStorage.setItem('highscore', 0)
+  }
 
 let grupoTiros = [] 
 let tiros = {
@@ -183,9 +186,7 @@ function desenha(){
         fim.des_obj()
         texto_game_over.des_text('Game Over',150,350, 'red','black','50px Impact')
         som4.play()
-        if (localStorage.highscore == 'undefined'){
-            localStorage.setItem('highscore', 0)
-        }
+        
     }    
     
 }
@@ -211,6 +212,7 @@ function atualiza(){
         if(nav1.pts > localStorage.highscore){
             localStorage.highscore = nav1.pts
         }
+        
     }
 }
 

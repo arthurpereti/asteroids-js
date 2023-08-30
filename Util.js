@@ -54,8 +54,9 @@ class Disco extends Obj{
 
         vel = Math.random() * (6 - 3) + 3
         velx = Math.random() * (2 - (-2)) + (-2)
+        
 
-    mov(){
+    mov(vel,velx){
         this.y += this.vel
         this.x += this.velx
     

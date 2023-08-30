@@ -8,6 +8,8 @@ let bg4 = new BG(0,-2100,500,700,'assets/bg2.jpg')
 let nav1 = new Nave(200,520,75,84.75,'assets/nave.png')
 let txt_pts = new Texto()
 let pts = new Texto()
+let txt_high = new Texto()
+let high = new Texto()
 let txt_vidas = new Texto()
 let n_vidas = new Texto()
 const texto_game_over = new Texto()
@@ -21,9 +23,6 @@ som1.loop = true
 som2.volume = 0.7
 som3.volume = 1.0
 som4.volume = 1.0
-
-
-
 
 
 let grupoTiros = [] 
@@ -134,35 +133,6 @@ function gameover(){
     }
 }
 
-function pontos(){
-    if(nav1.point(disco1)){
-        nav1.pts +=1
-    }else if(nav1.point(disco2)){
-        nav1.pts +=1
-    }else if(nav1.point(disco3)){
-        nav1.pts +=1
-    }
-}
-
-// function colisao(){
-//     if(nav1.colid(disco1)){
-//         disco1.recomeca()
-//         nav1.vida -=1
-//         som1.pause()
-//         som2.play()
-//     }else if(nav1.colid(disco2)){
-//         disco2.recomeca()
-//         nav1.vida -=1
-//         som1.pause()
-//         som2.play()
-//     }else if(nav1.colid(disco3)){
-//         disco3.recomeca()
-//         nav1.vida -=1
-//         som1.pause()
-//         som2.play()
-//     }
-// }
-
 function colisao(){
     grupoDiscos.forEach((disc)=>{
         if(nav1.colid(disc)){
@@ -205,13 +175,17 @@ function desenha(){
         })
         txt_pts.des_text('Pontos:',10,65,'white','orange','30px Times')
         pts.des_text(nav1.pts,120,65,'white','orange','30px Times')
+        txt_high.des_text('Highscore:',10,95,'white','orange','30px Times')
+        high.des_text(localStorage.highscore,145,95,'white','orange','30px Times')
         txt_vidas.des_text('Vidas:',380,65,'white','orange','30px Times')
         n_vidas.des_text(nav1.vida,460,65,'white','orange','30px Times')
     }else{
         fim.des_obj()
         texto_game_over.des_text('Game Over',150,350, 'red','black','50px Impact')
         som4.play()
-
+        if (localStorage.highscore == 'undefined'){
+            localStorage.setItem('highscore', 0)
+        }
     }    
     
 }
@@ -231,10 +205,12 @@ function atualiza(){
         })
         tiros_nave() // acrescentado - verificar
         colisao()
-        // pontos()
         gameover()
         tiros.atual()
         discos.atual()
+        if(nav1.pts > localStorage.highscore){
+            localStorage.highscore = nav1.pts
+        }
     }
 }
 

@@ -6,6 +6,8 @@ let bg2 = new BG(0, -700, 500, 700, 'assets/bg2.jpg')
 let bg3 = new BG(0, -1400, 500, 700, 'assets/bg1.jpg')
 let bg4 = new BG(0, -2100, 500, 700, 'assets/bg2.jpg')
 let nav1 = new Nave(200, 520, 75, 84.75, 'assets/nave.png')
+let txt_high = new Texto()
+let high = new Texto()
 let txt_pts = new Texto()
 let pts = new Texto()
 let txt_vidas = new Texto()
@@ -23,7 +25,9 @@ som3.volume = 1.0
 som4.volume = 1.0
 
 
-
+if(!localStorage.getItem('highscore')){
+    localStorage.setItem('highscore', 0)
+  }
 
 
 let grupoTiros = []
@@ -193,6 +197,8 @@ function desenha() {
         })
         txt_pts.des_text('Pontos:', 10, 65, 'white', 'orange', '30px Times')
         pts.des_text(nav1.pts, 120, 65, 'white', 'orange', '30px Times')
+        txt_high.des_text('Highscore:',10,95,'white','orange','30px Times')
+        high.des_text(localStorage.highscore,145,95,'white','orange','30px Times')
         txt_vidas.des_text('Vidas:', 380, 65, 'white', 'orange', '30px Times')
         n_vidas.des_text(nav1.vida, 460, 65, 'white', 'orange', '30px Times')
     } else if (jogar == 2) {
@@ -204,6 +210,8 @@ function desenha() {
         })
         txt_pts.des_text('Pontos:', 10, 65, 'white', 'orange', '30px Times')
         pts.des_text(nav1.pts, 120, 65, 'white', 'orange', '30px Times')
+        txt_high.des_text('Highscore:',10,95,'white','orange','30px Times')
+        high.des_text(localStorage.highscore,145,95,'white','orange','30px Times')
         txt_vidas.des_text('Vidas:', 380, 65, 'white', 'orange', '30px Times')
         n_vidas.des_text(nav1.vida, 460, 65, 'white', 'orange', '30px Times')
     } else {
@@ -233,6 +241,9 @@ function atualiza() {
         gameover()
         tiros.atual()
         discos.atual()
+        if(nav1.pts > localStorage.highscore){
+            localStorage.highscore = nav1.pts
+        }
     } else if (jogar == 2) {
         nav1.mov()
         grupoTiros.forEach((tiro) => {
@@ -246,6 +257,9 @@ function atualiza() {
         gameover()
         tiros.atual()
         discos.atual()
+        if(nav1.pts > localStorage.highscore){
+            localStorage.highscore = nav1.pts
+        }
     }
 }
 
